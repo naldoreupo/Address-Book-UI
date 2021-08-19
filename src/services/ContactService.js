@@ -1,27 +1,36 @@
 import axios from 'axios';
 
+
+const baseUrl = 'https://localhost:44371/api/contact';
+
 const contactService = {
 
-  getAll: function () {
-    return axios.get('https://localhost:44371/api/contact/Getall')
+  getAll: async function () {
+    return await axios.get(`${baseUrl}/Getall`)
       .then(function (response) {
         return response.data;
       })
   },
-  save: function (contact) {
-    return axios.post('https://localhost:44371/api/contact', contact)
+  getById: async function (id) {
+    return await axios.get(`${baseUrl}/${id}`)
+      .then(function (response) {
+        return response.data;
+      })
+  },
+  create: async function (contact) {
+    return await axios.post(`${baseUrl}`, contact)
       .then(function (response) {
         return response.data;
       });
   },
-  delete: function (id) {
-    return axios.delete(`https://localhost:44371/api/contact/${id}`)
+  update: async function (contact) {
+    return await axios.put(`${baseUrl}/${contact.id}`, contact)
       .then(function (response) {
         return response.data;
       });
   },
-  update: function (id,contact) {
-    return axios.put(`https://localhost:44371/api/contact/${id}`, contact)
+  delete: async function (id) {
+    return await axios.delete(`${baseUrl}/${id}`)
       .then(function (response) {
         return response.data;
       });

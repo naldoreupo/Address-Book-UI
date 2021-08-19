@@ -1,22 +1,43 @@
 import React, { useEffect, useState } from 'react';
-import  contactService  from '../services/ContactService.js';
+import contactService from '../services/ContactService.js';
 
-const ContactsList = () => {
-  const [list, setList] = useState([]);
+const ContactsList = (props) => {
+
+  const [contacts, setContacts] = useState([]);
 
   useEffect(() => {
-    let mounted = true;
+    getContacts();
+  })
+
+  const getContacts = () => {
+
     contactService.getAll()
-      .then(items => {
-        if (mounted) {
-          setList(items.list)
+      .then(reponse => {
+        setContacts(reponse.list)
+      });
+  }
+
+  const handleUpdate = (event) => {
+
+    const { value } = event.target;
+    props.history.push('/add',{id : value});
+
+  }
+
+  const handleDelete = (event) => {
+    const { value } = event.target;
+
+    contactService.delete(value)
+      .then(reponse => {
+        if (reponse.status) {
+          alert('Contact successfully removed');
+          getContacts();
         }
-      })
-    return () => mounted = false;
-  }, [])
+      });
+   }
 
   return (
-    <div>
+    <div >
       <h2>List of contacts</h2>
       <table class="styled-table">
         <thead>
@@ -24,13 +45,13 @@ const ContactsList = () => {
             <td>Id</td>
             <td>Name</td>
             <td>Last Name</td>
-            <td>Address</td>
             <td>Phone</td>
+            <td>Address</td>
             <td>Actions</td>
           </tr>
         </thead>
         <tbody>
-          {list.map(item =>
+          {contacts.map(item =>
             <tr key={item.id}>
               <td>{item.id} </td>
               <td>{item.name} </td>
@@ -38,8 +59,9 @@ const ContactsList = () => {
               <td>{item.phone} </td>
               <td>{item.address} </td>
               <td>
-                <button>Update</button>
-                <button>Delete</button>
+                <button onClick={handleDelete} value={item.id}>Delete</button>
+                &nbsp;&nbsp;&nbsp;
+                <button onClick={handleUpdate} value={item.id}>Update</button>
               </td>
             </tr>
           )}
