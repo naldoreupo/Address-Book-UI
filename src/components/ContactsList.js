@@ -3,24 +3,28 @@ import contactService from '../services/ContactService.js';
 
 const ContactsList = (props) => {
 
+  const [mounted, setMounted] = useState(false);
   const [contacts, setContacts] = useState([]);
 
   useEffect(() => {
     getContacts();
-  })
+  }, [mounted])
 
   const getContacts = () => {
 
-    contactService.getAll()
-      .then(reponse => {
-        setContacts(reponse.list)
-      });
+    if (!mounted) {
+      contactService.getAll()
+        .then(reponse => {
+          setContacts(reponse.list)
+          setMounted(true)
+        });
+    }
   }
 
   const handleUpdate = (event) => {
 
     const { value } = event.target;
-    props.history.push('/add',{id : value});
+    props.history.push('/add', { id: value });
 
   }
 
@@ -31,10 +35,11 @@ const ContactsList = (props) => {
       .then(reponse => {
         if (reponse.status) {
           alert('Contact successfully removed');
+          setMounted(() => false)
           getContacts();
         }
       });
-   }
+  }
 
   return (
     <div >
