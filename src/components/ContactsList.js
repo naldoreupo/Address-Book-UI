@@ -24,11 +24,12 @@ const ContactsList = (props) => {
   const handleUpdate = (event) => {
 
     const { value } = event.target;
-    props.history.push('/add', { id: value });
+    props.history.push(`/add/${value}`, { id: value });
 
   }
 
   const handleDelete = (event) => {
+
     const { value } = event.target;
 
     contactService.delete(value)
