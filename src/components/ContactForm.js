@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import contactService from '../services/ContactService.js';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useHistory, useParams } from 'react-router-dom';
 
 const ContactForm = props => {
 
   const history = useHistory();
+  const { id } = useParams();
 
   useEffect(() => {
     if (location.state != null) {
@@ -29,7 +30,7 @@ const ContactForm = props => {
 
   const [contact, setContact] = useState(initialState);
   const [errorMsg, setErrorMsg] = useState('');
-  const { id, name, lastName, phone, address } = contact;
+  const { name, lastName, phone, address } = contact;
 
   const handleOnSubmit = (event) => {
 
@@ -48,14 +49,14 @@ const ContactForm = props => {
     }
 
     const contact = {
-      id,
       name,
       lastName,
       phone,
       address
     };
 
-    if (contact.id > 0) {
+    if (id > 0) {
+      contact.id = parseInt(id);
       contactService.update(contact)
         .then(response => {
           if (response) {

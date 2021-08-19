@@ -12,6 +12,7 @@ const AppRouter = () => {
         <div className="main-content">
           <Switch>
             <Route component={ContactsList} path="/" exact={true} />
+            <Route component={AddContact} path="/add/:id" />
             <Route component={AddContact} path="/add" />
           </Switch>
         </div>
